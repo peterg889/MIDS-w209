@@ -98,6 +98,36 @@ d3.json("/home/rani/Downloads/viz/site/sample.json", function(data) {
 		return colors[port_idx];
 	};
 
+	var getAllCountryData = function(oct_select, t){
+		countries = {}
+		for(var i = 0; i < 256; i++){
+			if(t[oct_select * 256 + i].hasOwnProperty('country')){
+				for (const [country, count] of Object.entries(t[oct_select * 256 + i]['country'])) {
+					if(!countries.hasOwnProperty('country')){
+						countries[country] = 0;
+					}
+					countries[country] += count
+				}
+			}
+		}
+		return countries;
+	};
+
+	var getAllPortData = function(oct_select, t){
+		ports = {}
+		for(var i = 0; i < 256; i++){
+			if(t[oct_select * 256 + i].hasOwnProperty('port')){
+				for (const [port, count] of Object.entries(t[oct_select * 256 + i]['port'])) {
+					if(!ports.hasOwnProperty('port')){
+						ports[port] = 0;
+					}
+					ports[port] += count
+				}
+			}
+		}
+		return ports;
+	};
+
 	
 	var colors = [
 	'#cab2d6',
@@ -196,8 +226,6 @@ d3.json("/home/rani/Downloads/viz/site/sample.json", function(data) {
 		.style("stroke", "rgb(30,30,30)")
 		.style("stroke-width", "1");
 	*/
-
-	//also this
 	
 	//draw debug grid + interaction layer (debug grid is the interaction layer for now)
 	subsect = []
@@ -224,6 +252,9 @@ d3.json("/home/rani/Downloads/viz/site/sample.json", function(data) {
 		.attr("class", function(d, i){ 
 			return octetsToClass(numToOctets(i*256)); 
 		})
+		.attr("oct_select", function(d, i){ 
+			return i; 
+		})
 		.style("fill-opacity", "0")
 		.style("stroke", "red")
 		.style("stroke-width", "1")
@@ -234,7 +265,12 @@ d3.json("/home/rani/Downloads/viz/site/sample.json", function(data) {
 				.style("stroke-opacity", "1");
 
 			var class_ip = d3.select(this).attr("class");
-			$("#ip_info").text("Current class: " + class_ip);
+			var oct_select = d3.select(this).attr("oct_select");
+			//$("#ip_info").text("Current class: " + class_ip);
+			var country_data = getAllCountryData(oct_select, t);
+			var port_data = getAllPortData(oct_select, t);
+			$("#ip_info_country").text(JSON.stringify(country_data));
+			$("#ip_info_port").text(JSON.stringify(port_data));
 		})
 		.on("mouseout", function(){
 			d3.select(this)
