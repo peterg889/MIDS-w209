@@ -266,12 +266,14 @@ d3.json("sample.json", function(data) {
 	}
 
 	// console.log(subsect)
-	var getXCoord = function (d, i){
-		return d[0] * expansion_factor * 16 + interactive_offset; 
+	var getSortedListFromDict = function (input_dict){
+		var list = [];
+		for (var key in input_dict){
+			list.push( [ key, input_dict[key] ] );
+		}
+		return list.sort(function(a,b) {return b[1] - a[1];});
 	}
-	var getYCoord = function (d, i){
-		return d[1] * expansion_factor * 16 + interactive_offset; 
-	}
+
 
 	svg.selectAll("g")
 		.data(hilbert_curve_256)
@@ -316,32 +318,36 @@ d3.json("sample.json", function(data) {
                 .style("top", y + 20 + "px");		
                 // .style("left", (this.x) + "px");	
                 // .style("top", (this.y) + "px");	
-            var country_data_list = "";
-            for (var country in country_data) {
-            	var country_length = country.length;
+            var country_data_string = "";
+            var country_data_list = getSortedListFromDict(country_data);
+            for (var index in country_data_list) {
+            	// console.log("country: ", country);
+            	country_name = country_data_list[index][0];
+            	country_count = country_data_list[index][1];
             	var country_string = "";
-            	console.log(country)
-            	if (country == "b\'\'" || country_length == 0) {
-            		country_string = "Unknown"
+            	console.log(country_name, country_count);
+            	if (country_name == "b\'\'" || country_name.length == 0) {
+            		country_name_string = "Unknown"
             	} else {
-            		country_string = country.slice(2,country_length - 1);
+            		country_name_string = country_name.slice(2,country_name.length - 1);
             	}
-            	// country_data_list += (country + " : " + country_data[country] + "<br>");
-            	country_data_list += (country_string + " : " + country_data[country] + "<br>");
+            	// country_data_string += (country + " : " + country_data[country] + "<br>");
+            	country_data_string += (country_name_string + " : " + country_count + "<br>");
             }
 
-            var port_data_list = "";
-            for (var port in port_data) {
-            	port_data_list += (port + " : " + port_data[port] + "<br>");
+            var port_data_string = "";
+            var port_data_list = getSortedListFromDict(port_data);
+            for (var index in port_data_list) {
+            	port_data_string += (port_data_list[index][0] + " : " + port_data_list[index][1] + "<br>");
             }
             infopaneldiv.html("<b>Octet Block:</b> " + oct_select +
             	"<br><br><b>Country info:</b> <br>" + 
             	// JSON.stringify(country_data) + 
-            	country_data_list + 
-            	"<br><br><b>IP Info:</b> <br>" + 
-            	port_data_list);
-			$("#ip_info_country").text(JSON.stringify(country_data));
-			$("#ip_info_port").text(JSON.stringify(port_data));
+            	country_data_string + 
+            	"<br><br><b>Port Info:</b> <br>" + 
+            	port_data_string);
+			// $("#ip_info_country").text(JSON.stringify(country_data));
+			// $("#ip_info_port").text(JSON.stringify(port_data));
 		})
 		.on("mouseout", function(){
 			d3.select(this)
