@@ -1,4 +1,4 @@
-d3.json("/home/rani/Downloads/viz/site/sample.json", function(data) {
+d3.json("sample.json", function(data) {
 
 	var incrementOctets = function(octets){
 		var max = 1;
@@ -183,6 +183,16 @@ d3.json("/home/rani/Downloads/viz/site/sample.json", function(data) {
 	var tile_size = Math.floor(expansion_factor / 2)
 	tile_size = 3
 
+	var div = d3.select("#hilbert").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
+
+	var infopaneldiv = d3.select("#infopaneldiv")
+    .attr("class", "infopanel")				
+    .style("opacity", 0.9)
+    .style("left", 850 + "px")
+    .style("top", 0 + "px");
+
 	//draw the squares
 	svg.selectAll("g")
 		.data(t)
@@ -255,7 +265,13 @@ d3.json("/home/rani/Downloads/viz/site/sample.json", function(data) {
 		}
 	}
 
-	console.log(subsect)
+	// console.log(subsect)
+	var getXCoord = function (d, i){
+		return d[0] * expansion_factor * 16 + interactive_offset; 
+	}
+	var getYCoord = function (d, i){
+		return d[1] * expansion_factor * 16 + interactive_offset; 
+	}
 
 	svg.selectAll("g")
 		.data(hilbert_curve_256)
@@ -283,12 +299,47 @@ d3.json("/home/rani/Downloads/viz/site/sample.json", function(data) {
 			d3.select(this)
 				.style("fill-opacity", "0.5")
 				.style("stroke-opacity", "1");
-
 			var class_ip = d3.select(this).attr("class");
 			var oct_select = d3.select(this).attr("oct_select");
 			//$("#ip_info").text("Current class: " + class_ip);
 			var country_data = getAllCountryData(oct_select, t);
 			var port_data = getAllPortData(oct_select, t);
+			var coordinates = [0, 0];
+			coordinates = d3.mouse(this)
+			var x = coordinates[0];
+			var y = coordinates[1];
+            div.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            div.html("Octet block: " + oct_select)	
+                .style("left", x +20 + "px")		
+                .style("top", y + 20 + "px");		
+                // .style("left", (this.x) + "px");	
+                // .style("top", (this.y) + "px");	
+            var country_data_list = "";
+            for (var country in country_data) {
+            	var country_length = country.length;
+            	var country_string = "";
+            	console.log(country)
+            	if (country == "b\'\'" || country_length == 0) {
+            		country_string = "Unknown"
+            	} else {
+            		country_string = country.slice(2,country_length - 1);
+            	}
+            	// country_data_list += (country + " : " + country_data[country] + "<br>");
+            	country_data_list += (country_string + " : " + country_data[country] + "<br>");
+            }
+
+            var port_data_list = "";
+            for (var port in port_data) {
+            	port_data_list += (port + " : " + port_data[port] + "<br>");
+            }
+            infopaneldiv.html("<b>Octet Block:</b> " + oct_select +
+            	"<br><br><b>Country info:</b> <br>" + 
+            	// JSON.stringify(country_data) + 
+            	country_data_list + 
+            	"<br><br><b>IP Info:</b> <br>" + 
+            	port_data_list);
 			$("#ip_info_country").text(JSON.stringify(country_data));
 			$("#ip_info_port").text(JSON.stringify(port_data));
 		})
@@ -296,7 +347,8 @@ d3.json("/home/rani/Downloads/viz/site/sample.json", function(data) {
 			d3.select(this)
 				.style("fill-opacity", "0")
 				.style("stroke-opacity", "0");
+			div.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
 		});
-	
-
 });
