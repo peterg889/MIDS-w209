@@ -1,3 +1,35 @@
+var helper_enabled_text = true;
+var helper_enabled_path = true;
+var svg = null;
+
+var toggle_helper_text = function(){
+	if(helper_enabled_text && svg != null){
+		d3.selectAll('.helperlayer_text')
+		.style("opacity", "0")
+		.style("stroke-opacity", "0");
+		helper_enabled_text = false;
+	} else if (svg != null && !helper_enabled_text){
+		d3.selectAll('.helperlayer_text')
+		.style("opacity", "1")
+		.style("stroke-opacity", "1");	
+		helper_enabled_text = true;	
+	}
+}
+
+var toggle_helper_path = function(){
+	if(helper_enabled_path && svg != null){
+		d3.selectAll('.helperlayer_path')
+		.style("opacity", "0")
+		.style("stroke-opacity", "0");
+		helper_enabled_path = false;
+	} else if (svg != null && !helper_enabled_path){
+		d3.selectAll('.helperlayer_path')
+		.style("opacity", "1")
+		.style("stroke-opacity", "1");	
+		helper_enabled_path = true;	
+	}
+}
+
 d3.json("sample.json", function(data) {
 
 	var incrementOctets = function(octets){
@@ -157,7 +189,6 @@ d3.json("sample.json", function(data) {
 	*/
 
 
-
 	t = data;
 
 	var expansion_factor = 3;
@@ -174,7 +205,7 @@ d3.json("sample.json", function(data) {
 
 	length = max_tile_length*expansion_factor + 10;
 
-	var svg = d3.select("#hilbert")
+	svg = d3.select("#hilbert")
 		.append("svg")
 		.attr("height", length)
 		.attr("width", length)
@@ -212,31 +243,6 @@ d3.json("sample.json", function(data) {
 		.style("fill-opacity", function(d, i){ return getOpacity(d['port']); });
 	
 
-	//this will draw the actual hilbert curve
-	/*
-	svg.selectAll("g")
-		.data(t)
-		.enter()
-		.append("line")
-		.attr("x1", function(d, i){ return d['coords']['x']*expansion_factor + data_offset; })
-		.attr("y1", function(d, i){ return d['coords']['y']*expansion_factor + data_offset; })
-		.attr("x2", function(d, i){ 
-			var target_idx = i + 1; 
-			if(target_idx > t.length - 1){ target_idx = i; } ; 
-			return t[target_idx]['coords']['x']*expansion_factor + data_offset; 
-		})
-		.attr("y2", function(d, i){ 
-			var target_idx = i + 1; 
-			if(target_idx > t.length - 1){ target_idx = i; } ; 
-			return t[target_idx]['coords']['y']*expansion_factor + data_offset; 
-		})
-		.attr("class", function(d, i){ 
-			return octetToClass(numToOctet(i)); 
-		})
-		.style("stroke", "rgb(30,30,30)")
-		.style("stroke-width", "1");
-	*/
-	
 	//draw debug grid + interaction layer (debug grid is the interaction layer for now)
 
 	var hilbert_curve_256 = [[0, 0], [1, 0], [1, 1], [0, 1], [0, 2], [0, 3], [1, 3], [1, 2], [2, 2], [2, 3], [3, 3], [3, 2], [3, 1], 
@@ -273,6 +279,49 @@ d3.json("sample.json", function(data) {
 		}
 		return list.sort(function(a,b) {return b[1] - a[1];});
 	}
+
+	svg.selectAll("g")
+		.data(hilbert_curve_256)
+		.enter()
+		.append("line")
+		.attr("x1", function(d, i){ return d[0] * expansion_factor * 16 + interactive_offset + 8 * expansion_factor; })
+		.attr("y1", function(d, i){ return d[1] * expansion_factor * 16 + interactive_offset + 8 * expansion_factor; })
+		.attr("x2", function(d, i){ 
+			var target_idx = i + 1; 
+			if(target_idx > hilbert_curve_256.length - 1){ target_idx = i; } ; 
+			return hilbert_curve_256[target_idx][0]*expansion_factor * 16 + interactive_offset + 8 * expansion_factor; 
+		})
+		.attr("y2", function(d, i){ 
+			var target_idx = i + 1; 
+			if(target_idx > hilbert_curve_256.length - 1){ target_idx = i; } ; 
+			return hilbert_curve_256[target_idx][1]*expansion_factor * 16 + interactive_offset + 8 * expansion_factor; 
+		})
+		.attr("class", "helperlayer_path")
+		.style("stroke", "rgb(70,70,100)") //was 30
+		.style("stroke-width", "4");
+
+	svg.selectAll("g")
+		.data(hilbert_curve_256)
+		.enter()
+		.append("text")
+		.text(function(d, i){ return i; })
+		.attr("class", "helperlayer_text")
+		.attr("font-size", "24px")
+		.style("fill", "white")
+		.style("font-weight", "800")
+		.style("stroke", "black")
+		.style("stroke-width", "1")
+		.attr("x", function(d, i){ return d[0] * expansion_factor * 16 + interactive_offset + 8 * expansion_factor; })
+		.attr("y", function(d, i){ return d[1] * expansion_factor * 16 + interactive_offset + 8 * expansion_factor; })
+		.attr("text-anchor", "middle")
+		.attr("alignment-baseline", "center")
+		.attr("dy", "0.35em");
+		/*
+		.attr("dx", function(d){
+			var x_offset = 0.35;
+			x_offset *= d.length;
+			return -x_offset + "em"
+	});*/
 
 
 	svg.selectAll("g")
@@ -357,4 +406,5 @@ d3.json("sample.json", function(data) {
                 .duration(500)		
                 .style("opacity", 0);	
 		});
+	
 });
