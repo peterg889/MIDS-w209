@@ -1,0 +1,63 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="css/internet.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <h1>Model of the Public Internet</h1>
+    <p><a href="index.htm">Return home</a>.</p>
+    <p>by: <a href="mailto:rani.fields@gmail.com">Rani Fields</a>,
+        <a href="mailto:peterg@berkeley.edu">Peter Grabowski</a>,
+        <a href="mailto:neman018@gmail.com">Aditya Nemani</a>,
+        <a href="mailto:jnhunsberger@berkeley.edu">Jason Hunsberger</a>
+        </p>
+    <h2 id="goals">Goals:</h2>
+    <p>Our goal was to use an adjacency matrix to visualize the public Internet and encode information that would be useful to a networking or information security professional. To accomplish this, we encoded the entire Internet Protocol v4 (IPv4) network address space using a Hilbert curve to keep related networks adjacent to each other.</p>
+    <p>We believe this visualization is a useful proof of concept for how to present, navigate, and enable exploration of a massive dataset related to the entire public Internet. With this visualization users will be able to answer questions such as: which IP blocks are explicitly reserved for special use addresses? which IP blocks are owned by particular countries? what network blocks are the used most prevalently? and many others.</p>
+    <h3>Intended Audience</h3>
+    <p>Computer Networking & Cyber-security Professionals</p>
+    <h3>Data Sources:</h3>
+    <p><a href="http://censys.io/data/ipv4">Censys</a></p>
+    <h3>Helpful Links</h3>
+    <p><a href="https://en.wikipedia.org/wiki/Hilbert_curve">Hilbert Curve</a></p>
+    <p><a href="https://en.wikipedia.org/wiki/IPv4">IPv4 Addresses</a></p>
+    <p><a href="https://en.wikipedia.org/wiki/List_of_assigned_/8_IPv4_address_blocks#List_of_reserved_.2F8_blocks">Reserved Blocks</a></p>
+    <p><a href="http://www.pearsonitcertification.com/articles/article.aspx?p=1868080">Common ports</a></p>
+    <p>Please wait...this visualization may take up to 30 seconds to load depending upon the bandwidth of your Internet connection.</p>
+    <p></p>
+    <div id="viz">
+        <div id="control_pane">
+            <input type="button" value="Toggle helper text" onclick="toggle_helper_text();"></button>
+            <!-- <input type="button" value="Toggle helper path" onclick="toggle_helper_path();"></button> -->
+        </div>
+        <div id="control_circle"></div>
+        <div id="hilbert"></div>
+        <div id="infopaneldiv"></div>
+        <div id="ip_info_country"></div>
+        <div id="ip_info_port"></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.12.0/d3.min.js"></script>
+    <!--
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-zoom/1.7.1/d3-zoom.min.js"></script>
+    <script src="https://d3js.org/d3-drag.v1.min.js"></script>
+    <script src="https://d3js.org/d3-zoom.v1.min.js"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
+    <script src="https://d3js.org/d3-ease.v1.min.js"></script>
+    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-selection.v1.min.js"></script>
+    <script src="https://d3js.org/d3-timer.v1.min.js"></script>
+    <script src="https://d3js.org/d3-transition.v1.min.js"></script>
+     -->
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+    <script src="js/colors.js"></script>
+    <script src="js/control_circle.js"></script>
+    <script src="js/hilbert.js"></script>
+    <script src="js/internet.js"></script>
+
+
+</body>
+</head>

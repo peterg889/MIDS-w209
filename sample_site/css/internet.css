@@ -1,0 +1,82 @@
+body {
+/*     font-family: Helvetica, Arial, Sans-Serif; */
+    font-family: Optima, Futura, sans-serif;
+
+}
+
+p {
+    width: 40em;
+}
+
+h2#network {
+    color: #FFED4E;
+    /* font-weight: bold; */
+    width: 200px;
+}
+
+
+.helperlayer_text{
+/*     font-family: Helvetica, Arial, Sans-Serif; */
+    font-family: Optima, Futura, sans-serif;
+    color: black;
+    -webkit-text-fill-color: white;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
+
+}
+
+div#viz {
+    background: #323232;
+    width: 1200px;
+    height: 1235px;
+    border-radius: 8px;
+}
+
+
+div#control_pane {
+    position: absolute;
+    top: 798px;
+    left: 15px;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: left;
+    color: #FFFFFF;
+    width: 80px;
+    height: 28px;
+    padding: 5px;
+    font-size: 12px;
+    background: #5E5E5E;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+div#infopaneldiv {
+    position: absolute;
+    text-align: left;
+    left: 877px;
+    top: 798px;
+    width: 300px;
+    height: 1200px;
+    padding: 10px;
+    font-size: 12px;
+    background: #5E5E5E;
+    color: #FFFFFF;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0.9;
+}
+
+.ribbons {
+    fill-opacity: 1.0;
+}
+
+
+/*
+.helperlayer_text{
+    font: 7px sans-serif;
+}
+ */
